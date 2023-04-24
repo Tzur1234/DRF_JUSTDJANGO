@@ -7,7 +7,8 @@ from rest_framework.parsers import JSONParser # Use to parse incoming HttpReques
 from rest_framework.renderers import JSONRenderer #a built-in renderer in Django Rest Framework that serializes data into JSON format.
 from rest_framework.decorators import api_view
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
-
+from rest_framework import mixins
+from rest_framework import generics
 
 from .models import Post
 from .serializers import PostSerializer
@@ -15,6 +16,49 @@ from .serializers import PostSerializer
 
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
+
+
+
+
+class PostMixinsListView(mixins.ListModelMixin ,
+                          mixins.CreateModelMixin,
+                            mixins.UpdateModelMixin,
+                            mixins.DestroyModelMixin,
+                              generics.GenericAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        # use the create() to take care of the : 
+        # 1. make from the request.data a new serializer instacne 
+        # 2. validate the serializer
+        # 3. Save the new instance in the DB
+        # 4. Generate a new Response object 
+        return self.create(request=request, *args, **kwargs)
+    
+    def put(self, request, *args, **kwargs):
+        # Use the update() from UpdateModelMixin to update the mixins
+        # 1. get the object from the db according to the pk in the url
+        # 2. Create a serializer based on the new request.data and the older instance 
+        # 3. Check if is_vlaid()
+        # 4. if vlaid , update the db (serializer.save())
+        # 4. return a response (serializer.data)
+        return self.update(request, *args, **kwargs)
+    
+    def delete(self, request, *args, **kwargs):
+        # use destroy function from mixins.DestroyModelMixin to delete
+        # 1. fetch the instance 
+        # 2. delte it from the db
+        # 3. send back a Response object
+        return self.destroy(request, *args, **kwargs)
+
+
+    
+
+
 
 
 
