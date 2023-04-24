@@ -19,6 +19,19 @@ from django.http import HttpResponse, JsonResponse
 
 
 
+class PostListView(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+class PostDetailView(generics.RetrieveAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+class PostDestroyView(generics.DestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+
 
 class PostMixinsListView(mixins.ListModelMixin ,
                           mixins.CreateModelMixin,
