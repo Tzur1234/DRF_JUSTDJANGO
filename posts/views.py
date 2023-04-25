@@ -12,17 +12,35 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsOwnerPermission
 
-from .models import Post
-from .serializers import PostSerializer
+from .models import Post, Comment
+from .serializers import PostSerializer, UserSerializer, CommentSerializer
 
 
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+class CommentListView(generics.ListAPIView):
+    # returns all the comments
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+
+class CommentDetailView(generics.RetrieveAPIView):
+    # returns all the comments
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+
+class UserDetailView(generics.RetrieveAPIView):
+    permission_classes = (AllowAny,)
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 class PostListView(generics.ListAPIView):
-
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
