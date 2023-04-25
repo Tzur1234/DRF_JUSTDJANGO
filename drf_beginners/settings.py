@@ -45,7 +45,7 @@ ROOT_URLCONF = 'drf_beginners.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/ 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -103,10 +103,9 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -120,3 +119,17 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny'
     ]
 }
+
+
+# the location of our static files in our location
+STATIC_URL = 'static/'
+
+# define the location of other static files when running "collectstatic"
+# In other words : where to look for all static files location 
+STATICFILES_DIRS  = [
+    BASE_DIR/'static'
+]
+
+# define when running 'collectstatic', where all the static files will be stored (the ane) 
+STATIC_ROOT = BASE_DIR / "staticfiles"  
+
