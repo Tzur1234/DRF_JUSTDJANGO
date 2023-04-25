@@ -11,6 +11,7 @@ from rest_framework import mixins
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsOwnerPermission
+from rest_framework import viewsets
 
 from .models import Post, Comment
 from .serializers import PostSerializer, UserSerializer, CommentSerializer
@@ -39,6 +40,8 @@ class UserDetailView(generics.RetrieveAPIView):
     permission_classes = (AllowAny,)
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
 
 class PostListView(generics.ListAPIView):
     queryset = Post.objects.all()
@@ -191,6 +194,10 @@ def post_detail(request, pk):
         return HttpResponse('Object was deleted!' ,status=204)
         
 
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = (AllowAny,)
 
         
 

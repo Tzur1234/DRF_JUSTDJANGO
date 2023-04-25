@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
 
 User = get_user_model()
 
@@ -25,3 +27,11 @@ class Post(models.Model):
 class Comment(models.Model):
     title = models.TextField()
 
+
+
+
+def presave_set_owner_field(sender, instance, **kwargs):
+        instance.owner = User.objects.last()
+        
+            
+pre_save.connect(presave_set_owner_field, sender=Post)
