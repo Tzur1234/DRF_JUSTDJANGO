@@ -9,6 +9,8 @@ from rest_framework.decorators import api_view
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 from rest_framework import mixins
 from rest_framework import generics
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from .permissions import IsOwnerPermission
 
 from .models import Post
 from .serializers import PostSerializer
@@ -20,18 +22,18 @@ from django.http import HttpResponse, JsonResponse
 
 
 class PostListView(generics.ListAPIView):
+
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
 class PostDetailView(generics.RetrieveAPIView):
+    permission_classes = (AllowAny, IsAuthenticated, IsOwnerPermission,)
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
 class PostDestroyView(generics.DestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-
-
 
 class PostMixinsListView(mixins.ListModelMixin ,
                           mixins.CreateModelMixin,
@@ -46,7 +48,7 @@ class PostMixinsListView(mixins.ListModelMixin ,
     
     def post(self, request, *args, **kwargs):
         # use the create() to take care of the : 
-        # 1. make from the request.data a new serializer instacne 
+        # 1. make from the request.data a new serializer instance 
         # 2. validate the serializer
         # 3. Save the new instance in the DB
         # 4. Generate a new Response object 
@@ -70,10 +72,6 @@ class PostMixinsListView(mixins.ListModelMixin ,
 
 
     
-
-
-
-
 
 @api_view(['GET', 'POST'])
 def post_list(request):
@@ -109,8 +107,7 @@ class PostView(APIView):
             post = Post.objects.get(id=pk)
         except Post.DoesNotExist:
             return Response(status=HTTP_400_BAD_REQUEST)
-        
-       
+              
         serializer = PostSerializer(post, request.data)
 
         if serializer.is_valid():
@@ -129,12 +126,6 @@ class PostView(APIView):
         return Response(status=HTTP_204_NO_CONTENT)
          
 
-
-
-
-        
- 
- 
 @csrf_exempt
 def post_list(request):
     
