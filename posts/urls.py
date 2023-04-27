@@ -3,5 +3,13 @@ from . import views
 
 urlpatterns = [
     path('', views.PostAPIView.as_view(), name='post-list'),
-    path('home', views.home, name='home-test'),
+    path('home/', views.home, name='home-test'),
 ]
+
+
+
+
+
+
+
+
